@@ -49,7 +49,9 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Retorna um array de claims a serem adicionados ao JWT.
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
      */
     public function getJWTCustomClaims()
     {
