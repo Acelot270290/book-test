@@ -2,63 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\StoresAction;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\StoreRequest;
 
 class StoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $storesAction;
+
+    public function __construct(StoresAction $storesAction)
+    {
+        $this->storesAction = $storesAction;
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->storesAction->getAllStores());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreRequest $request)
     {
-        //
+        $store = $this->storesAction->createStore($request->all());
+        return response()->json(['message' => 'Store created successfully', 'store' => $store], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        try {
+            $store = $this->storesAction->getStore($id);
+            return response()->json($store);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Store not found'], 404);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(StoreRequest $request, $id)
     {
-        //
+        try {
+            $store = $this->storesAction->updateStore($id, $request->all());
+            return response()->json(['message' => 'Store updated successfully', 'store' => $store]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Store not found'], 404);
+        }
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        try {
+            $this->storesAction->deleteStore($id);
+            return response()->json(['message' => 'Store deleted successfully']);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Store not found'], 404);
+        }
     }
 }

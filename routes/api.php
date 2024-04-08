@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\StoreController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,8 +25,5 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::apiResource('/books', BookController::class);
+    Route::apiResource('/stores', StoreController::class);
 });
-
-Route::get('/test', function () {
-    return response()->json(['message' => 'Autenticado'], 200);
-})->middleware('auth:api');

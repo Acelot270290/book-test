@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Actions\BooksAction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use App\Http\Requests\BookRequest;
+
 
 class BookController extends Controller
 {
@@ -21,7 +23,7 @@ class BookController extends Controller
         return response()->json($books);
     }
 
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
         $book = $this->booksAction->createBook($request->all());
         return response()->json(['message' => 'Book created successfully', 'book' => $book], 201);
@@ -33,7 +35,7 @@ class BookController extends Controller
         return response()->json($book);
     }
 
-    public function update(Request $request, $id)
+    public function update(BookRequest  $request, $id)
     {
         try {
             $book = $this->booksAction->updateBook($id, $request->all());
